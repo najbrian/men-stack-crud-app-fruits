@@ -21,6 +21,15 @@ const Fruit = require('./models/fruit.js')
 app.get ('/', async (req, res) => {
   res.render('index.ejs')
 })
+//GET /fruits/new ---- (form for new fruits)
+app.get('/fruits/new', (req, res) => {
+  res.render('fruits/new.ejs')
+})
+
+//POST /fruits --- (when new fruit is submitted)
+app.post('/fruits', (req,res) => {
+  res.render('fruits')
+})
 
 app.listen(3000, () => {
   console.log("Listening on port 3000")
