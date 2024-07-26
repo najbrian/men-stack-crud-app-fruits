@@ -22,12 +22,14 @@ const Fruit = require('./models/fruit.js')
 app.use(express.urlencoded({ extended: false }))
 
 //GET /
-app.get ('/', async (req, res) => {
+app.get('/', async (req, res) => {
   res.render('index.ejs')
 })
 //GET /fruits
-app.get ('/fruits', (req, res) => {
-  res.send ('Welcome to the index page!')
+app.get('/fruits', async (req, res) => {
+  const allFruits = await Fruit.find({})
+  console.log(allFruits)
+  res.render('fruits/index.ejs', { fruits: allFruits })
 })
 
 //GET /fruits/new ---- (form for new fruits)
@@ -35,15 +37,21 @@ app.get('/fruits/new', (req, res) => {
   res.render('fruits/new.ejs')
 })
 
+//GET /fruits/:fruitId -- (when looking for individual fruits)
+app.get('/fruits/:fruitId', async(req, res) => {
+  const foundFruit = await Fruit.findById(req.params.fruitId)
+  res.render("fruits/show.ejs", { fruit:foundFruit } )
+})
+
 //POST /fruits --- (when new fruit is submitted)
-app.post('/fruits', async (req,res) => {
+app.post('/fruits', async (req, res) => {
   if (req.body.isReadyToEat === "on") {
     req.body.isReadyToEat = true;
   } else {
     req.body.isReadyToEat = false;
   }
   await Fruit.create(req.body);
-  res.redirect('/fruits/new')
+  res.redirect('/fruits')
 })
 
 app.listen(3000, () => {
